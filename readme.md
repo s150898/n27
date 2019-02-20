@@ -9,15 +9,15 @@ Wir wollen eine Banking-App programmieren, die sich an die N26-Bank anlehnt.
 * Überweisungen durchführen
 * Kontenübersicht anzeigen
 * Kontoauszug / Kontobewegungen anzeigen
-* Gesprächstermine vereinbaren
+* Gesprächstermine vereinbaren 
 * Supportfragen stellen / Problem melden
 * Kredit aufnehmen / beantragen / Konditionen anzeigen
 * Angebote anbieten
 * Events vorstellen
-* NFC-Bezahlungen durchführen
+* NFC-Bezahlung durchführen
 * Immobilien anzeigen
 * Aktien anzeigen / kaufen / ...
-* PayPal / Bitcoin unterstützen
+* Paypal / Bitcoin unterstützen
 * Jobangebote anzeigen
 * Impressum anzeigen
 * Geldautomaten in der Nähe zeigen
@@ -26,5 +26,5 @@ Wir wollen eine Banking-App programmieren, die sich an die N26-Bank anlehnt.
 
 ### login.html
 * Textfeld für Benutzername
-* Textfelfd für Kennwort
+* Textfeld für das Kennwort
 * Button zum Klicken
