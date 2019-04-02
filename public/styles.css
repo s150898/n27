@@ -72,9 +72,22 @@ input {
     font-size: 4vw;    
     text-align:center;  
     color: white;
-   }
+  }
+
    a {  
     color: white;  
     text-decoration: none;
-   }
+  }
+
+  p {
+    color: black;
+    font-size: 3vw;
+    font-family: Arial, Helvetica, sans-serif; 
+  }
+
+  h3 {
+    color: black;
+    font-size: 3vw;
+    font-family: Arial, Helvetica, sans-serif;
+  }
   
