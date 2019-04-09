@@ -103,7 +103,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {
-            meldung: "Das Konto " + konto.Kontonummer +" wurde erfolgreich angelegt."                              
+            meldung: "Das " + konto.Kontoart +" " + konto.Kontonummer +" wurde erfolgreich angelegt."                              
         })
     }else{
         res.render('login.ejs', {                    
