@@ -54,7 +54,7 @@ app.post('/',(req, res, next) => {
     }
 })
 
-app.get('/impressum', (req, res, next) => {   
+app.get('/impressum',(req, res, next) => {   
 
     let idKunde = req.cookies['istAngemeldetAls']
     
@@ -68,7 +68,7 @@ app.get('/impressum', (req, res, next) => {
     }
 })
 
-app.get('/kontoAnlegen', (req, res, next) => {   
+app.get('/kontoAnlegen',(req, res, next) => {   
 
     let idKunde = req.cookies['istAngemeldetAls']
     
@@ -82,7 +82,7 @@ app.get('/kontoAnlegen', (req, res, next) => {
     }
 })
 
-app.post('/kontoAnlegen', (req, res, next) => {   
+app.post('/kontoAnlegen',(req, res, next) => {   
 
     let idKunde = req.cookies['istAngemeldetAls']
     
