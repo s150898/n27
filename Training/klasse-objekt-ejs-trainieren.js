@@ -1,3 +1,6 @@
+// Server starten ...     .\node_modules\.bin\nodemon .\Training\klasse-objekt-ejs-trainieren.js
+// Um diese Seite im Browser aufzurufen ...    http://localhost:3000/klasse-objekt-ejs-trainieren
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
@@ -121,7 +124,7 @@ app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {
         nummer : fußballer.nummer,
         marke : fahrrad.marke,
         farbe : fahrrad.farbe,
-
+        gaenge : fahrrad.gaenge
     })
 })
 
@@ -129,7 +132,6 @@ app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {
 // "breite : rechteck.breite" ,damit das im Browser angezeigt wird 
 // Zur klasse-objekt...ejs wechseln und da im Body "  Breite: <%= breite %    eingeben
 
-// Name,Nummer,Verein
-// Fußballer
+
 
 
