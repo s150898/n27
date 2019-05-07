@@ -5,6 +5,22 @@ class Konto {
     }
 }
 
+class Kunde {
+    constructor() {
+        this.Mail
+        this.Name
+        this.Kennwort
+        this.IdKunde
+        
+    }
+}
+
+let kunde = new Kunde ()
+kunde.Mail = "zuki@gmail.com"
+kunde.Name = "Zuki"
+kunde.Kennwort = 123
+kunde.IdKunde = 4711
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -48,7 +64,7 @@ app.post('/',(req, res, next) => {
     const idKunde = req.body.idKunde
     const kennwort = req.body.kennwort
 
-    if(idKunde ==="4711" && kennwort ==="123"){
+    if(idKunde == kunde.IdKunde && kennwort === kunde.Kennwort){
         console.log("Der Cookie wird gesetzt")
         res.cookie('istAngemeldetAls','idKunde')
         res.render('index.ejs', {                    
