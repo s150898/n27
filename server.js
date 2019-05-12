@@ -15,6 +15,11 @@ class Kunde {
     }
 }
 
+
+
+
+
+
 let kunde = new Kunde ()
 kunde.Mail = "zuki@gmail.com"
 kunde.Name = "Zuki"
