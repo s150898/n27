@@ -11,14 +11,8 @@ class Kunde {
         this.Name
         this.Kennwort
         this.IdKunde
-        
     }
 }
-
-
-
-
-
 
 let kunde = new Kunde ()
 kunde.Mail = "zuki@gmail.com"
@@ -131,4 +125,17 @@ app.post('/kontoAnlegen',(req, res, next) => {
         })    
     }
 })
+
+class Schueler {
+    constructor() {
+        this.Name
+        this.Klasse
+        this.Adresse
+    }
+}
+
+let schueler = new Schueler ()
+schueler.Name = "Max Mustermann"
+schueler.Klasse = 11
+schueler.Adresse = "Musterstraße 1, 1234 Musterstadt"
 

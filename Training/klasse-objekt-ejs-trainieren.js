@@ -20,7 +20,16 @@ const server = app.listen(process.env.PORT || 3000, () => {
 // Auf "this." folgt immer ein Wort, das mit Kleinbuchstabe beginnt, keine Umlaute verwenden. Objekt immer klein
 
 
+class Fahrrad {
+    constructor() {
+        this.Marke
+        this.Preis
+    }
+}
 
+let fahrrad = new Fahrrad ()
+fahrrad.Marke = "BULLS"
+fahrrad.Preis = "500€"
 
 // Klassendefinition
 
@@ -31,30 +40,18 @@ class Rechteck {
     }
 }
 
-class Schueler {
+class Auto {
     constructor() {
-        this.geschlecht
-        this.vorname
-        this.alter
+        this.Marke
+        this.Modell
+        this.Preis
     }
 }
 
-class Fußballer {
-    constructor() {
-        this.name
-        this.nationalitaet
-        this.nummer
-    }
-}
-
-class Fahrrad {
-    constructor() {
-        this.marke
-        this.farbe
-        this.gaenge
-    }
-}
-
+let auto = new Auto()
+auto.Marke = "VW"
+auto.Modell = "Golf"
+auto.Preis = "20.000 €"
 
 
 // Deklaration eines Rechteckobjekts vom Typ Rechteck.
@@ -73,39 +70,25 @@ class Fahrrad {
 
 // let rechteck = new Rechteck() ist Deklaration, Instanziierung
 
+
 let rechteck = new Rechteck()
 rechteck.breite = 3
 rechteck.laenge = 2
-
-let schueler = new Schueler()
-schueler.geschlecht = "w"
-schueler.vorname = "Petra"
-schueler.alter = 16
-
-let fußballer = new Fußballer()
-fußballer.name = "Höwedes"
-fußballer.nationalitaet = "Deutschland"
-fußballer.nummer = 5
-
-let fahrrad = new Fahrrad ()
-fahrrad.marke = "KTM"
-fahrrad.farbe = "schwarz"
-fahrrad.gaenge = 24
 
 // Zahlen nicht in Anführungszeichen,  Buchstaben, Wörter mit Anführungszeichen
 // Postleitzahl in Anführungszeichen, weil bei Berlin mit Null beginnt , weil führende Nullen weg und weil Alter, das nicht in Anführungszeichen steht, berechnet werden kann
 // Um etwas auf der Konsole/ im Terminal anzuzeigen...
 // Es wird nur 2 bzw. 3 angezeigt
 
-console.log(rechteck.breite)
-console.log(rechteck.laenge)
+
 
 // Um beide Werte anzuzeigen ... (hier 3 und 2)
 console.log(rechteck)
 
 // Damit davor Länge,... steht
-console.log("Breite:" + rechteck.breite)
+
 console.log("Länge:" + rechteck.laenge)
+
 
 // Wenn localhost:3000/klasse-objekt-ejs-trainieren aufgerufen wird ...
 
@@ -116,15 +99,11 @@ app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {
     res.render('klasse-objekt-ejs-trainieren', {  
         breite : rechteck.breite,
         laenge : rechteck.laenge,
-        geschlecht : schueler.geschlecht,
-        vorname : schueler.vorname,
-        alter : schueler.alter,
-        name : fußballer.name,
-        nationalitaet : fußballer.nationalitaet,
-        nummer : fußballer.nummer,
-        marke : fahrrad.marke,
-        farbe : fahrrad.farbe,
-        gaenge : fahrrad.gaenge
+        marke : fahrrad.Marke,
+        preis : fahrrad.Preis,
+        marke : auto.Marke,
+        modell : auto.Modell,
+        preis : auto.Preis
     })
 })
 
