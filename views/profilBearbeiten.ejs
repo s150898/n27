@@ -12,10 +12,10 @@
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>N27 - Startseite</title>
+    <title>N27 - Profil bearbeiten</title>
   </head>
-  <body>
-    <h1>Herzlich Willkommen</h1>     
+  <body>    
+    <h1>Profil bearbeiten</h1>  
     <nav>      
       <a href="/"><i class="fa fa-home" aria-hidden="true"></i></a>                        
       <a href="/login">Logout</a>        
@@ -23,9 +23,22 @@
       <a href="/profilBearbeiten">Profil bearbeiten</a>     
       <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
     </nav>  
-    <form>          
-      <button formaction="/kontoAnlegen">Konto anlegen</button>
-      <button formaction="/profilBearbeiten">Profil bearbeiten</button>
+    <form method="POST" action="/profilBearbeiten">          
+        <label>Mail:</label>          
+        <input type="text" name="mail">
+        <label>Name:</label>          
+        <input type="text" name="name"> 
+        <label>Kennwort:</label>          
+        <input type="number" name="kennwort"> 
+        <label>Adresse:</label>          
+        <input type="text" name="adresse">
+        <label>Telefon:</label>          
+        <input type="number" name="telefon">          
+        <button>Profil bearbeiten</button>
     </form> 
+    <p>
+      <%= meldung%>
+    </p>
   </body>
 </html>
+

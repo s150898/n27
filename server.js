@@ -11,14 +11,18 @@ class Kunde {
         this.Name
         this.Kennwort
         this.IdKunde
+        this.Geburtsdatum
+        this.Adresse
+        this.Telefon
+
     }
 }
 
 let kunde = new Kunde ()
 kunde.Mail = "zuki@gmail.com"
 kunde.Name = "Zuki"
-kunde.Kennwort = 123
-kunde.IdKunde = 4711
+kunde.Kennwort = "123"
+kunde.IdKunde = "4711"
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -63,7 +67,7 @@ app.post('/',(req, res, next) => {
     const idKunde = req.body.idKunde
     const kennwort = req.body.kennwort
 
-    if(idKunde == kunde.IdKunde && kennwort === kunde.Kennwort){
+    if(idKunde === kunde.IdKunde && kennwort === kunde.Kennwort){
         console.log("Der Cookie wird gesetzt")
         res.cookie('istAngemeldetAls','idKunde')
         res.render('index.ejs', {                    
@@ -119,6 +123,44 @@ app.post('/kontoAnlegen',(req, res, next) => {
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {
             meldung: "Das " + konto.Kontoart +" " + konto.Kontonummer +" wurde erfolgreich angelegt."                              
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.get('/profilBearbeiten',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('profilBearbeiten.ejs', { 
+        meldung:""                             
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.post('/profilBearbeiten',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+
+        
+        kunde.Mail = req.body.mail
+        kunde.Name = req.body.name
+        kunde.Kennwort = req.body.kennwort
+        kunde.Adresse = req.body.adresse
+        kunde.Telefon = req.body.telefon
+        
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('profilBearbeiten.ejs', {
+            meldung: "Das Profil wurde aktualisiert."                              
         })
     }else{
         res.render('login.ejs', {                    
