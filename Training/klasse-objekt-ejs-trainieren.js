@@ -19,18 +19,6 @@ const server = app.listen(process.env.PORT || 3000, () => {
 // Auf "class" folgt immer ein Wort, das mit Großbuchstabe beginnt. Klasse immer groß
 // Auf "this." folgt immer ein Wort, das mit Kleinbuchstabe beginnt, keine Umlaute verwenden. Objekt immer klein
 
-
-class Fahrrad {
-    constructor() {
-        this.Marke
-        this.Preis
-    }
-}
-
-let fahrrad = new Fahrrad ()
-fahrrad.Marke = "BULLS"
-fahrrad.Preis = "500€"
-
 // Klassendefinition
 
 class Rechteck {
@@ -40,18 +28,6 @@ class Rechteck {
     }
 }
 
-class Auto {
-    constructor() {
-        this.Marke
-        this.Modell
-        this.Preis
-    }
-}
-
-let auto = new Auto()
-auto.Marke = "VW"
-auto.Modell = "Golf"
-auto.Preis = "20.000 €"
 
 
 // Deklaration eines Rechteckobjekts vom Typ Rechteck.
@@ -89,7 +65,6 @@ console.log(rechteck)
 
 console.log("Länge:" + rechteck.laenge)
 
-
 // Wenn localhost:3000/klasse-objekt-ejs-trainieren aufgerufen wird ...
 
 app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {   
@@ -98,12 +73,7 @@ app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {
 
     res.render('klasse-objekt-ejs-trainieren', {  
         breite : rechteck.breite,
-        laenge : rechteck.laenge,
-        marke : fahrrad.Marke,
-        preis : fahrrad.Preis,
-        marke : auto.Marke,
-        modell : auto.Modell,
-        preis : auto.Preis
+        laenge : rechteck.laenge
     })
 })
 

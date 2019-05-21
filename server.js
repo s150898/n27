@@ -71,7 +71,7 @@ app.post('/',(req, res, next) => {
     }else{
         console.log("Der Cookie wird gelöscht")
         res.cookie('istAngemeldetAls','')
-        res.render('login.ejs', {                    
+        res.render('login.ejs', {                  
         })
     }
 })
@@ -125,17 +125,4 @@ app.post('/kontoAnlegen',(req, res, next) => {
         })    
     }
 })
-
-class Schueler {
-    constructor() {
-        this.Name
-        this.Klasse
-        this.Adresse
-    }
-}
-
-let schueler = new Schueler ()
-schueler.Name = "Max Mustermann"
-schueler.Klasse = 11
-schueler.Adresse = "Musterstraße 1, 1234 Musterstadt"
 
