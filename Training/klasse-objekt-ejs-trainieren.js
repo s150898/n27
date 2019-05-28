@@ -52,7 +52,7 @@ rechteck.breite = 3
 rechteck.laenge = 2
 
 // Zahlen nicht in Anführungszeichen,  Buchstaben, Wörter mit Anführungszeichen
-// Postleitzahl in Anführungszeichen, weil bei Berlin mit Null beginnt , weil führende Nullen weg und weil Alter, das nicht in Anführungszeichen steht, berechnet werden kann
+// Postleitzahl, evtl. Hausnummer in Anführungszeichen, weil bei Berlin mit Null beginnt , weil führende Nullen weg und weil damit nicht gerechnet werden soll und weil Alter, das nicht in Anführungszeichen steht, berechnet werden kann
 // Um etwas auf der Konsole/ im Terminal anzuzeigen...
 // Es wird nur 2 bzw. 3 angezeigt
 

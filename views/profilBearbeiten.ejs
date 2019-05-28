@@ -19,8 +19,9 @@
     <nav>      
       <a href="/"><i class="fa fa-home" aria-hidden="true"></i></a>                        
       <a href="/login">Logout</a>        
-      <a href="/impressum">Impressum</a>
-      <a href="/profilBearbeiten">Profil bearbeiten</a>     
+      <a href="/"><i class="fa fa-user" aria-hidden="true"></i></a>  
+      <a href="/profilBearbeiten">Profil bearbeiten</a>
+      <a href="/impressum">Impressum</a>     
       <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
     </nav>  
     <form method="POST" action="/profilBearbeiten">          
@@ -34,7 +35,7 @@
         <input type="text" name="adresse">
         <label>Telefon:</label>          
         <input type="number" name="telefon">          
-        <button>Profil bearbeiten</button>
+        <button>Profil ändern</button>
     </form> 
     <p>
       <%= meldung%>
