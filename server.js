@@ -28,7 +28,7 @@ let kunde = new Kunde ()
 
 kunde.Mail = "zuki@gmail.com"
 kunde.Name = "Zuki"
-kunde.Kennwort = "123"
+kunde.Kennwort = 123
 kunde.IdKunde = "4711"
 
 const express = require('express')
@@ -86,8 +86,8 @@ app.post('/',(req, res, next) => {
     // von kunde ist UND wenn der Wert von kennwort gleich dem Wert der
     // Eigenschaft Kennwort von kunde ist, dann werden die Anweisungen im Rumpf
     // der if-Kontrollstruktur ausgeführt.  
-    
-    if(idKunde == kunde.IdKunde && kennwort === kunde.Kennwort){
+
+    if(idKunde == kunde.IdKunde && kennwort == kunde.Kennwort){
         console.log("Der Cookie wird gesetzt")
         res.cookie('istAngemeldetAls','idKunde')
         res.render('index.ejs', {                    
