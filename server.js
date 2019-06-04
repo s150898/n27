@@ -1,9 +1,11 @@
+// .\node_modules\.bin\nodemon .\server.js
+
 // Klassendefinition
 
 class Konto {
     constructor() {
-        this.Kontonummer;
-        this.Kontoart;
+        this.Kontonummer
+        this.Kontoart
     }
 }
 
