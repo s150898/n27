@@ -1,4 +1,4 @@
-// 
+// .\node_modules\.bin\nodemon .\server.js
 
 
 // Klassendefinition
@@ -37,12 +37,43 @@ kunde.IdKunde = "4711"
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const mysql = require('mysql')
 const iban = require('iban')
 const app = express()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
+
+// host: Adresse des Servers
+// port: lauscht auf port 3306
+const dbVerbindung = mysql.createConnection ({
+    host: "10.40.38.110",
+    port: "3306",
+    database: "dbn27",
+    user: "placematman",
+    password: "BKB123456!"
+})
+
+//Verbindung zum Srver wird hergestellt
+dbVerbindung.connect()
+
+// Die Kontotabelle wird angelegt. (Spalten der Tabelle (Attribute), dahinter Datentypen)
+// über die IBAN bekomme ich auch allen anderen Attribute, IBAN eindeutig
+// ; beendet SQL Befehl
+// err Variable, die den Fehler angibt
+
+dbVerbindung.connect(function(err){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssalso FLOAT, kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+        if(err){
+            
+            console.log("Es ist ein Fehler aufgetreten: " + err)
+        }else{
+            console.log("Tabelle erstellt bzw. schon existent")
+        }
+    })
+})
+
 
 const server = app.listen(process.env.PORT || 3000, () => {
     console.log('Server lauscht auf Port %s', server.address().port)    
@@ -149,7 +180,11 @@ app.post('/kontoAnlegen',(req, res, next) => {
         let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
         console.log(errechneteIban)
         
-        
+        // Einfügen von kontonummer in die Tabelle konto, mit der Sprache sql
+
+        dbVerbindung.query("INSERT INTO konto(kontonummer) VALUES(123)")
+
+
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {
             meldung: "Das " + konto.Kontoart + " mit der Iban " + errechneteIban + " wurde erfolgreich angelegt." 
@@ -219,12 +254,16 @@ app.post('/ueberweisen',(req, res, next) => {
     
     if(idKunde){
 
-        kunde.Telefonnummer = req.body.telefonnummer
-        kunde.Mail = req.body.mail
-        kunde.Adresse = req.body.adresse
-        kunde.Kennwort = req.body.kennwort
-        kunde.Nachname= "Mustermann"
-        
+       // Das Zielkonto und der Betarg wird aus dem Formular entgegengenommen.
+
+       let zielkontonummer = req.body.zielkontonummer
+       let betrag = req.body.betrag
+
+       // To do: Saldo um den Betrag reduzieren.
+       // To do: Betrag beim Zielkonto gutschreiben.
+
+       // Umsetzung mit einer gemeinsamen relationalen  Datenbank.
+
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('ueberweisen.ejs', {
             meldung: "Die Überweisung wurde erfolgreich ausgeführt."                              
