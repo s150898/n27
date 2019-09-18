@@ -66,7 +66,6 @@ dbVerbindung.connect()
 dbVerbindung.connect(function(err){
     dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssalso FLOAT, kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
         if(err){
-            
             console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
             console.log("Tabelle erstellt bzw. schon existent")
@@ -180,11 +179,18 @@ app.post('/kontoAnlegen',(req, res, next) => {
         let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
         console.log(errechneteIban)
         
-        // Einfügen von kontonummer in die Tabelle konto, mit der Sprache sql
+        // Einfügen von iban, anfangssaldo, kontoart, timestamp in die Tabelle konto, mit der Sprache sql
 
-        dbVerbindung.query("INSERT INTO konto(kontonummer) VALUES(123)")
-
-
+        dbVerbindung.connect(function(err){
+            dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp);",function(err, result){
+                if(err){
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                }else{
+                    console.log("Tabelle erstellt bzw. schon existent")
+                }
+            })
+        })
+        
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {
             meldung: "Das " + konto.Kontoart + " mit der Iban " + errechneteIban + " wurde erfolgreich angelegt." 
