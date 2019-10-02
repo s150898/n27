@@ -58,13 +58,17 @@ const dbVerbindung = mysql.createConnection ({
 //Verbindung zum Server wird hergestellt
 dbVerbindung.connect()
 
-// Die Kontotabelle wird angelegt. (Spalten der Tabelle (Attribute), dahinter Datentypen)
+// DAten werden in Tabellen gehalten
+// Sprache in sql
+// Die Kontotabelle wird angelegt, sofern sie nicht existiert. (Spalten der Tabelle (Attribute), dahinter Datentypen)
 // über die IBAN bekomme ich auch allen anderen Attribute, IBAN eindeutig
 // ; beendet SQL Befehl
 // err Variable, die den Fehler angibt
+// VARCHAR(22) max 22 Zeichen (Buchstaben oder Zahlen?)
+// primary key kennzeichnet datensatz eindeutig; es kann keine 2 gleiche iban geben
 
 dbVerbindung.connect(function(err){
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssalso FLOAT, kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
         if(err){
             console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
@@ -180,9 +184,10 @@ app.post('/kontoAnlegen',(req, res, next) => {
         console.log(errechneteIban)
         
         // Einfügen von iban, anfangssaldo, kontoart, timestamp in die Tabelle konto, mit der Sprache sql
+        // 2000 weil Zahl nicht in Hochkommas
 
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp);",function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp) VALUES ('DE1907200200', 2000, 'Saprkonto', NOW());",function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
