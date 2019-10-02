@@ -55,7 +55,7 @@ const dbVerbindung = mysql.createConnection ({
     password: "BKB123456!"
 })
 
-//Verbindung zum Srver wird hergestellt
+//Verbindung zum Server wird hergestellt
 dbVerbindung.connect()
 
 // Die Kontotabelle wird angelegt. (Spalten der Tabelle (Attribute), dahinter Datentypen)
