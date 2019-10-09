@@ -9,6 +9,8 @@ class Konto {
         this.Kontoart
     }
 }
+// Die Klasse ist der Bauplan, der alle relevanten Eigenschaften enthält.
+// Nach der Deklaration wird mit dem reservierten Wort 'new' ein Objekt der Klasse instanziiert.
 
 class Kunde {
     constructor() {
@@ -60,12 +62,12 @@ dbVerbindung.connect()
 
 // DAten werden in Tabellen gehalten
 // Sprache in sql
-// Die Kontotabelle wird angelegt, sofern sie nicht existiert. (Spalten der Tabelle (Attribute), dahinter Datentypen)
+// Die Tabelle konto wird angelegt, sofern sie nicht existiert. (Spalten der Tabelle (Attribute), dahinter Datentypen)
 // über die IBAN bekomme ich auch allen anderen Attribute, IBAN eindeutig
 // ; beendet SQL Befehl
 // err Variable, die den Fehler angibt
-// VARCHAR(22) max 22 Zeichen (Buchstaben oder Zahlen?)
-// primary key kennzeichnet datensatz eindeutig; es kann keine 2 gleiche iban geben
+// VARCHAR(22) Zeichenkette mit max 22 Zeichen (Buchstaben und Zahlen)
+// primary key kennzeichnet datensatz; das einzelne Konto eindeutig; es kann keine 2 gleiche iban geben
 
 dbVerbindung.connect(function(err){
     dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
@@ -96,12 +98,6 @@ app.get('/',(req, res, next) => {
         res.render('login.ejs', {                    
         })    
     }
-})
-
-app.get('/login',(req, res, next) => {         
-    res.cookie('istAngemeldetAls', '')       
-    res.render('login.ejs', {                    
-    })
 })
 
 app.get('/login',(req, res, next) => {   
@@ -176,15 +172,20 @@ app.post('/kontoAnlegen',(req, res, next) => {
     
     if(idKunde){
 
+        // Von der Klasse Konto wird ein Objekt namens konto instanziiert
         let konto = new Konto()
+
+        // Nach der Deklaration und Instanziierung kommt die Initialisierung. D.h., 
+        // dass konkrete Eigenscahftswerte dem Objekt zugewiesen werden.
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
+        // Client stellt request , reqeust enthält Wert der Kontonummer
 
         let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
         console.log(errechneteIban)
         
         // Einfügen von iban, anfangssaldo, kontoart, timestamp in die Tabelle konto, mit der Sprache sql
-        // 2000 weil Zahl nicht in Hochkommas
+        // 2000 ohne Hochkommas, weil Zahl nicht in Hochkommas
 
         dbVerbindung.connect(function(err){
             dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp) VALUES ('DE1907200200', 2000, 'Saprkonto', NOW());",function(err, result){
