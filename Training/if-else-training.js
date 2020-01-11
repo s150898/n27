@@ -13,7 +13,7 @@
  let x = undefined
  let y = 100
 
- if("GW11b".includes("11") && "GW11b".startsWith("G")){
+ if("Hallo".includes("a")){
     console.log("Die Prüfung ist WAHR. Es werden die Anweisungen im Rumpf von IF ausgeführt.")
  }else{
     console.log("Die Prüfung ist FALSCH. Es werden die Anweisungen im Rumpf von ELSE ausgeführt.") 
@@ -27,11 +27,11 @@
 
 // 17. if("max".length) Die Prüfung ist wahr.Der Wert von ("max".length) ist 3. 
 
-// 16. if(undefined) Die Prüfung ist falsch. Wenn ein Object nicht existiert ist es undefined.
+// 16. if(undefined) Die Prüfung ist falsch. Wenn ein Objekt nicht existiert, ist es undefined.
 
 // 15. if(0 > x || x < 10) Logisches "oder". Die Prüfung ist wahr,wenn die linke oder die rechte oder beide Prüfungen wahr sind.
 
-// 14. if(0 < x && x < 11) Logisches und. Die Prüfung ist wahr, wenn beide Prüfungen wahr sind. 
+// 14. if(0 < x && x < 11) Logisches "und". Die Prüfung ist wahr, wenn beide Prüfungen wahr sind. 
 
 // 13. if("")Die Prüfung ist falsch.
 
@@ -41,11 +41,11 @@
 
 // 10. if(0) Die Prüfung ist falsch. 
 
-//  9. if(false) Prüfung ist Falsch. Der Rumpf von if ist unereichbarer Code.
+//  9. if(false) Prüfung ist falsch. Der Rumpf von if ist unereichbarer Code.Es wir hier immer else ausgeführt
 
-//  8. if(true)      Prüfung ist wahr.Der Rumpf von else ist unereichbarer Code.
+//  8. if(true)      Prüfung ist wahr.Der Rumpf von else ist unerreichbarer Code.
 
-//  7. if(1 === "1") Prüfung auf "Gleichheit des wertes" und "Gleicheit des Typs" Diese Prüfung ist falsch.
+//  7. if(1 === "1") Prüfung auf "Gleichheit des wertes" und "Gleicheit des Typs" Diese Prüfung ist falsch. in "" ist ein string
 
 //  6. if(0 != 1)     Prüfung auf "Ungleichheit". Die Prüfung ist wahr.
 
@@ -57,4 +57,6 @@
 
 //  2. if(0 > 1)     Prüfung auf "größer als". Die Prüfung ist falsch. 
 
-//  1. if(1 == 1)    Prüfung auf Gleichheit des Wertes. Die Prüfung ist wahr. 
+//  1. if(1 == 1)    Prüfung auf Gleichheit des Wertes. Die Prüfung ist wahr.
+
+// Es muss nicht unbedingt else geben

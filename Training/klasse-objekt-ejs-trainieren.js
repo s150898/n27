@@ -79,7 +79,7 @@ app.get('/klasse-objekt-ejs-trainieren',(req, res, next) => {
 
 // Zwischen den Aufzählungen Komma, dahinter nicht
 // "breite : rechteck.breite" ,damit das im Browser angezeigt wird 
-// Zur klasse-objekt...ejs wechseln und da im Body "  Breite: <%= breite %    eingeben
+// Zur klasse-objekt...ejs wechseln und da im Body "  Breite: <%= breite %>    eingeben
 
 
 

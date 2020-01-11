@@ -187,8 +187,12 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // Einfügen von iban, anfangssaldo, kontoart, timestamp in die Tabelle konto, mit der Sprache sql
         // 2000 ohne Hochkommas, weil Zahl nicht in Hochkommas
 
+        // "INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp) VALUES ('" und "', 2000, '', NOW());" sind jeweils 2 String wegen der Anführungszeichen
+        // die Hochkaommas sind ein Teil des SQL Befehls und müssen da bleiben
+        // weil das alles wie ein String ist werden die dynamischen Inhalte mit plus eingefügt  
+
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp) VALUES ('DE1907200200', 2000, 'Saprkonto', NOW());",function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp) VALUES ('" + errechneteIban + "', 2000, '"+ kontoart +"', NOW());",function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
@@ -271,8 +275,36 @@ app.post('/ueberweisen',(req, res, next) => {
        let zielkontonummer = req.body.zielkontonummer
        let betrag = req.body.betrag
 
-       // To do: Saldo um den Betrag reduzieren.
-       // To do: Betrag beim Zielkonto gutschreiben.
+    /*
+    // Der aktuelle Anfangssaldo wird aus der Datenbank ausgelesen, um dann mit diesem aktuellen Wert weiterrechnen zu können
+    // Hier wieder Hochkommas gehören zum SQL Befehl dann weil quasi 2 Strings die Hochkommas, der dynamischen Inhalt mit Plus einfügen
+       
+    dbVerbindung.connect(function(err){
+        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + zielkontonummer +"';",function(err, result){
+            if(err){
+                console.log("Es ist ein Fehler aufgetreten: " + err)
+            }else{
+                console.log("Tabelle erstellt bzw. schon existent")
+            }
+        })
+    })
+    */
+
+
+    // Hier gleiches Schema, die Hochkommas gehören nicht zum SQL Befehl weil es ZAhlen  sind und damit gerechnet wird Zielkontonummer ist aber Text deswegen Hochkommas
+
+    dbVerbindung.connect(function(err){
+        dbVerbindung.query("UPDATE konto SET anfangssaldo = anfangssaldo +  " + betrag + " WHERE iban = '" + zielkontonummer + "'  ;",function(err, result){
+            if(err){
+                console.log("Es ist ein Fehler aufgetreten: " + err)
+            }else{
+                console.log("Tabelle erstellt bzw. schon existent")
+            }
+        })
+        })
+
+       // To do: Saldo um den Betrag reduzieren mit einem SQL-Update.
+       // To do: Betrag beim Zielkonto gutschreiben mit einem SQL-Update.
 
        // Umsetzung mit einer gemeinsamen relationalen  Datenbank.
 
