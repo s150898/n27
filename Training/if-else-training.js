@@ -10,14 +10,18 @@
  
  // Die Zahl 1 wird zugewiesen an eine Variable namens x
  
+ /*
+
  let x = undefined
  let y = 100
 
- if("Hallo".includes("a")){
+ if(true){
     console.log("Die Prüfung ist WAHR. Es werden die Anweisungen im Rumpf von IF ausgeführt.")
  }else{
     console.log("Die Prüfung ist FALSCH. Es werden die Anweisungen im Rumpf von ELSE ausgeführt.") 
  }
+
+ */
 
 // 20. if("GW11b".includes("11")) Die Prüfung ist wahr. Die Methode includes prüft, ob ein String einen anderen enthält. 
 
@@ -45,7 +49,7 @@
 
 //  8. if(true)      Prüfung ist wahr.Der Rumpf von else ist unerreichbarer Code.
 
-//  7. if(1 === "1") Prüfung auf "Gleichheit des wertes" und "Gleicheit des Typs" Diese Prüfung ist falsch. in "" ist ein string
+//  7. if(1 === "1") Prüfung auf "Gleichheit des Wertes" und "Gleicheit des Typs" Diese Prüfung ist falsch. in "" ist ein string
 
 //  6. if(0 != 1)     Prüfung auf "Ungleichheit". Die Prüfung ist wahr.
 
@@ -60,3 +64,20 @@
 //  1. if(1 == 1)    Prüfung auf Gleichheit des Wertes. Die Prüfung ist wahr.
 
 // Es muss nicht unbedingt else geben
+
+
+// wenn unter 18, kommt man nicht rein
+// über 18 und w 3 Euro
+// über und m 15 Euro
+
+let a = 4
+let b = 4
+let z = undefined
+
+if(a >= 2 && b < 5){
+   z = 7
+}else{
+   z = 3
+}
+
+console.log(z)

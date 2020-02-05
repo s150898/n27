@@ -5,12 +5,16 @@
 
 class Konto {
     constructor() {
+        this.Iban
         this.Kontonummer
         this.Kontoart
+        this.Anfangssaldo
     }
 }
 // Die Klasse ist der Bauplan, der alle relevanten Eigenschaften enthält.
 // Nach der Deklaration wird mit dem reservierten Wort 'new' ein Objekt der Klasse instanziiert.
+
+let konto
 
 class Kunde {
     constructor() {
@@ -173,16 +177,20 @@ app.post('/kontoAnlegen',(req, res, next) => {
     if(idKunde){
 
         // Von der Klasse Konto wird ein Objekt namens konto instanziiert
-        let konto = new Konto()
+        konto = new Konto()
 
         // Nach der Deklaration und Instanziierung kommt die Initialisierung. D.h., 
         // dass konkrete Eigenscahftswerte dem Objekt zugewiesen werden.
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
+        konto.Anfangssaldo = req.body.anfangssaldo
         // Client stellt request , reqeust enthält Wert der Kontonummer
 
-        let errechneteIban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
-        console.log(errechneteIban)
+        konto.Iban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
+        console.log(konto.Iban)
+
+        // let errechneteIban das ist eine lokale variable die lebt nur für diese if else
+        // deswegen Eigenschaft
         
         // Einfügen von iban, anfangssaldo, kontoart, timestamp in die Tabelle konto, mit der Sprache sql
         // 2000 ohne Hochkommas, weil Zahl nicht in Hochkommas
@@ -192,7 +200,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // weil das alles wie ein String ist werden die dynamischen Inhalte mit plus eingefügt  
 
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban, anfangssaldo, kontoart, timestamp) VALUES ('" + errechneteIban + "', 2000, '"+ kontoart +"', NOW());",function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban,anfangssaldo,kontoart, timestamp) VALUES ('" + konto.Iban + "', " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
@@ -203,7 +211,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAnlegen.ejs', {
-            meldung: "Das " + konto.Kontoart + " mit der Iban " + errechneteIban + " wurde erfolgreich angelegt." 
+            meldung: "Das " + konto.Kontoart + " mit der Iban " + konto.Iban + " mit dem Anfangssaldo " + konto.Anfangssaldo + "€ wurde erfolgreich angelegt." 
 
         })
     }else{
@@ -318,4 +326,36 @@ app.post('/ueberweisen',(req, res, next) => {
     }
 })
 
+app.get('/kontoAbfragen',(req, res, next) => {   
 
+    let idKunde = req.cookies['istAngemeldetAls']
+
+
+    //Aus der Datenbank muss der Kontostand für das Objekt selektiert werden.
+    // Bei den dynamischen Inahlten braucht es '', weil es sich um keine Zahl handelt
+    // Problem: Iban muss erst noch als Eigenschaft angelegt werden usw. (??)
+    
+    dbVerbindung.connect(function(err){
+        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + konto.Iban + "';",function(err, result){
+            if(err){
+                console.log("Es ist ein Fehler aufgetreten: " + err)
+            }else{
+                console.log("Kontostand wurde erfolgreich abgefragt. Der Kontostand ist: " + result[0].anfangssaldo)
+                console.log(result[0].anfangssaldo)
+            
+
+            }
+        })
+        })
+
+
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('kontoAbfragen.ejs', { 
+        meldung:"Hallo"                             
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})

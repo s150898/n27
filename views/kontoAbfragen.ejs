@@ -12,10 +12,10 @@
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>N27 - Konto anlegen</title>
+    <title>N27 - Kontostand abfragen</title>
   </head>
   <body>    
-    <h1>Konto anlegen</h1>  
+    <h1>Kontostand abfragen</h1>  
     <nav>      
       <a href="/"><i class="fa fa-home" aria-hidden="true"></i></a>                        
       <a href="/login">Logout</a>          
@@ -23,17 +23,6 @@
       <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
       <a href="/profilBearbeiten"><i class="fa fa-user" aria-hidden="true"></i></a>
     </nav>  
-    <form method="POST" action="/kontoAnlegen">          
-        <label>Kontonummer:</label>          
-        <input type="text" name="kontonummer" pattern="[0-9]{10}" title="Bitte exakt 10 Ziffern eingeben!">
-        <label>Kontoart:</label>          
-        <input type="text" name="kontoart"  pattern="Giro|Spar">    
-        <label>Anfangssaldo:</label>          
-        <input type="number" name="anfangssaldo">          
-        <button>Konto anlegen</button>
-    </form> 
-    <p>
-      <%= meldung%>
-    </p>
+    <%= meldung%>
   </body>
 </html>
