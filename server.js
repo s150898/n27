@@ -9,6 +9,7 @@ class Konto {
         this.Kontonummer
         this.Kontoart
         this.Anfangssaldo
+        this.IdKunde
     }
 }
 // Die Klasse ist der Bauplan, der alle relevanten Eigenschaften enthält.
@@ -70,7 +71,7 @@ dbVerbindung.connect()
 // primary key kennzeichnet datensatz; das einzelne Konto eindeutig; es kann keine 2 gleiche iban geben
 
 dbVerbindung.connect(function(err){
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), idkunde INT(11), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
         if(err){
             console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
@@ -93,16 +94,18 @@ dbVerbindung.connect(function(err){
 
 kunde.Mail = "s150898@berufskolleg-borken.de"
 kunde.Vorname = "L"
-kunde.Vorname = "E"
+kunde.Nachname = "E"
 kunde.Kennwort = "123"
 kunde.IdKunde = 150898
+
+
 
 dbVerbindung.connect(function(err){
     dbVerbindung.query("INSERT INTO kunde(idkunde, vorname, nachname, kennwort, mail) VALUES (" + kunde.IdKunde + ", '" + kunde.Vorname + "', '" + kunde.Nachname + "', '" + kunde.Kennwort + "','" + kunde.Mail + "');", function(err, result){
         if(err){
             console.log("Es ist ein Fehler aufgetreten: " + err)
         }else{
-            console.log("Tabelle erstellt bzw. schon existent")
+            console.log("Kunde angelegt bzw. schon existent")
         }
     })
 })
@@ -211,6 +214,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
         konto.Anfangssaldo = req.body.anfangssaldo
+        konto.IdKunde = IdKunde
         // Client stellt request , reqeust enthält Wert der Kontonummer
 
         konto.Iban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
@@ -227,7 +231,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // weil das alles wie ein String ist werden die dynamischen Inhalte mit plus eingefügt  
 
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban,anfangssaldo,kontoart, timestamp) VALUES ('" + konto.Iban + "', " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, idkunde, anfangssaldo,kontoart,  timestamp) VALUES ('" + konto.Iban + "', "+ IdKunde +", " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
@@ -363,7 +367,7 @@ app.get('/kontoAbfragen',(req, res, next) => {
     // Problem: Iban muss erst noch als Eigenschaft angelegt werden usw. (??)
     
     dbVerbindung.connect(function(err){
-        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + konto.Iban + "';",function(err, result){
+        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE idkunde = '" + IdKunde + "';",function(err, result){
             if(err){
                 console.log("Es ist ein Fehler aufgetreten: " + err)
             }else{
