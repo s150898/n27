@@ -9,13 +9,15 @@ class Konto {
         this.Kontonummer
         this.Kontoart
         this.Anfangssaldo
+        // Die IdKunde ist eine Eigenschaft von Konto.
+        // Jedes Konto wird einem Kunden zugeordnet.
         this.IdKunde
     }
 }
 // Die Klasse ist der Bauplan, der alle relevanten Eigenschaften enthält.
 // Nach der Deklaration wird mit dem reservierten Wort 'new' ein Objekt der Klasse instanziiert.
 
-let konto
+let konto = new Konto ()
 
 class Kunde {
     constructor() {
@@ -71,21 +73,41 @@ dbVerbindung.connect()
 // primary key kennzeichnet datensatz; das einzelne Konto eindeutig; es kann keine 2 gleiche iban geben
 
 dbVerbindung.connect(function(err){
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS konto(iban VARCHAR(22), idkunde INT(11), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE konto(iban VARCHAR(22), idKunde INT(11), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
         if(err){
-            console.log("Es ist ein Fehler aufgetreten: " + err)
+            if(err.code == "ER_TABLE_EXISTS_ERROR"){
+                console.log("Die Tabelle konto existiert bereits." )
+            }else{
+                console.log("Es ist ein Fehler aufgetreten: " + err.code)
+            }  
         }else{
-            console.log("Tabelle konto erstellt bzw. schon existent")
+            console.log("Tabelle konto erstellt.")
         }
     })
 })
 
-dbVerbindung.connect(function(err){
-    dbVerbindung.query("CREATE TABLE IF NOT EXISTS kunde(idkunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY (idkunde));",function(err, result){
-        if(err){
-            console.log("Es ist ein Fehler aufgetreten: " + err)
+
+/*
+if(err){
+            if(err.code == "ER_TABLE_EXISTS_ERROR"){
+                console.log("Die Tabelle konto existiert bereits." )
+            }else{
+                console.log("Es ist ein Fehler aufgetreten: " + err.code)
+            }  
         }else{
-            console.log("Tabelle kunde erstellt bzw. schon existent")
+            console.log("Tabelle konto erstellt.")
+        }
+*/
+dbVerbindung.connect(function(err){
+    dbVerbindung.query("CREATE TABLE IF NOT EXISTS kunde(idKunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY (idKunde));",function(err, result){
+        if(err){
+            if(err.code == "ER_TABLE_EXISTS_ERROR"){
+                console.log("Die Tabelle kunde existiert bereits." )
+            }else{
+                console.log("Es ist ein Fehler aufgetreten: " + err.code)
+            }  
+        }else{
+            console.log("Tabelle kunde erstellt.")
         }
     })
 })
@@ -101,14 +123,20 @@ kunde.IdKunde = 150898
 
 
 dbVerbindung.connect(function(err){
-    dbVerbindung.query("INSERT INTO kunde(idkunde, vorname, nachname, kennwort, mail) VALUES (" + kunde.IdKunde + ", '" + kunde.Vorname + "', '" + kunde.Nachname + "', '" + kunde.Kennwort + "','" + kunde.Mail + "');", function(err, result){
+    dbVerbindung.query("INSERT INTO kunde(idKunde, vorname, nachname, kennwort, mail) VALUES (" + kunde.IdKunde + ", '" + kunde.Vorname + "', '" + kunde.Nachname + "', '" + kunde.Kennwort + "','" + kunde.Mail + "');", function(err, result){
         if(err){
-            console.log("Es ist ein Fehler aufgetreten: " + err)
+            if(err.code == "ER_DUP_ENTRY"){
+                console.log("Der Kunde mit der ID " + kunde.IdKunde + " existiert bereits" )
+            }else{
+                console.log("Es ist ein Fehler aufgetreten: " + err)
+            }  
         }else{
-            console.log("Kunde angelegt bzw. schon existent")
+            console.log("Kunde " + kunde.IdKunde + " erfolgreich eingefügt.")
         }
     })
 })
+
+
 
 // alles in '' was ein String ist (Zaheln und Buchstaben) ->Zahlen ohne Hochkommas
 // Das Programm will die Daten immer wieder einfügen -> d.h., die IdKunde gibt es mehrmals; das ist aber der primary key, den es nur einmal geben kann; deswegen error 
@@ -214,7 +242,8 @@ app.post('/kontoAnlegen',(req, res, next) => {
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
         konto.Anfangssaldo = req.body.anfangssaldo
-        konto.IdKunde = IdKunde
+        konto.IdKunde = idKunde
+    
         // Client stellt request , reqeust enthält Wert der Kontonummer
 
         konto.Iban = iban.fromBBAN(laenderkennung, bankleitzahl + " " + req.body.kontonummer)
@@ -231,12 +260,17 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // weil das alles wie ein String ist werden die dynamischen Inhalte mit plus eingefügt  
 
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban, idkunde, anfangssaldo,kontoart,  timestamp) VALUES ('" + konto.Iban + "', "+ IdKunde +", " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, idKunde, anfangssaldo,kontoart,  timestamp) VALUES ('" + konto.Iban + "', "+ konto.IdKunde +", " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
-                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                    if(err.code == "ER_DUP_ENTRY"){
+                        console.log("Das Konto mit der ID " + konto.IdKunde + " existiert bereits" )
+                    }else{
+                        console.log("Es ist ein Fehler aufgetreten: " + err)
+                    }  
                 }else{
-                    console.log("Tabelle erstellt bzw. schon existent")
+                    console.log("Konto " + konto.IdKunde + " erfolgreich eingefügt.")
                 }
+
             })
         })
         
@@ -367,17 +401,15 @@ app.get('/kontoAbfragen',(req, res, next) => {
     // Problem: Iban muss erst noch als Eigenschaft angelegt werden usw. (??)
     
     dbVerbindung.connect(function(err){
-        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE idkunde = '" + IdKunde + "';",function(err, result){
+        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE idKunde = '" + idKunde + "';",function(err, result){
             if(err){
                 console.log("Es ist ein Fehler aufgetreten: " + err)
             }else{
+                if(result[0] != null)
                 console.log("Kontostand wurde erfolgreich abgefragt. Der Kontostand ist: " + result[0].anfangssaldo)
-                console.log(result[0].anfangssaldo)
-            
-
             }
         })
-        })
+    })
 
 
     if(idKunde){
