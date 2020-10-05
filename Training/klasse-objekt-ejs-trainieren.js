@@ -51,6 +51,9 @@ let rechteck = new Rechteck()
 rechteck.breite = 3
 rechteck.laenge = 2
 
+// Der Wert 2 wird zugewiesen an die Eigeschaft namens Breite des Objektes Rechteck
+// -> man liest von links nach rechts
+
 // Zahlen nicht in Anführungszeichen,  Buchstaben, Wörter mit Anführungszeichen
 // Postleitzahl, evtl. Hausnummer in Anführungszeichen, weil bei Berlin mit Null beginnt , weil führende Nullen weg und weil damit nicht gerechnet werden soll und weil Alter, das nicht in Anführungszeichen steht, berechnet werden kann
 // Um etwas auf der Konsole/ im Terminal anzuzeigen...

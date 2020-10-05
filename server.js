@@ -16,6 +16,7 @@ class Konto {
 }
 // Die Klasse ist der Bauplan, der alle relevanten Eigenschaften enthält.
 // Nach der Deklaration wird mit dem reservierten Wort 'new' ein Objekt der Klasse instanziiert.
+// Alle Objekte, die von dieser Klasse instanziiert werden, haben dieselben Eigenschaften, aber möglciherweise unterschiedliche Eigenschaftswerte
 
 let konto = new Konto ()
 
@@ -38,6 +39,7 @@ let kunde = new Kunde ()
 
 // Initialisierung
 
+// Externe Module werden eingebunden
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -59,6 +61,8 @@ const dbVerbindung = mysql.createConnection ({
     user: "placematman",
     password: "BKB123456!"
 })
+
+
 
 //Verbindung zum Server wird hergestellt
 dbVerbindung.connect()
@@ -98,6 +102,9 @@ if(err){
             console.log("Tabelle konto erstellt.")
         }
 */
+
+// Die Rückmeldung der Datenbank über den Erfolg des Anlegens der Tabelle steckt in der Variablen "err"
+
 dbVerbindung.connect(function(err){
     dbVerbindung.query("CREATE TABLE IF NOT EXISTS kunde(idKunde INT(11), vorname VARCHAR(45), nachname VARCHAR(45), kennwort VARCHAR(45), mail VARCHAR(45), PRIMARY KEY (idKunde));",function(err, result){
         if(err){
