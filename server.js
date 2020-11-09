@@ -1,6 +1,10 @@
 // .\node_modules\.bin\nodemon .\server.js
 
 
+
+
+
+
 // Klassendefinition
 
 class Konto {
@@ -12,6 +16,9 @@ class Konto {
         // Die IdKunde ist eine Eigenschaft von Konto.
         // Jedes Konto wird einem Kunden zugeordnet.
         this.IdKunde
+        this.Zinssatz
+        this.Laufzeit
+        this.Anfangskapital
     }
 }
 // Die Klasse ist der Bauplan, der alle relevanten Eigenschaften enthält.
@@ -423,6 +430,49 @@ app.get('/kontoAbfragen',(req, res, next) => {
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('kontoAbfragen.ejs', { 
         meldung:"Hallo"                             
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.get('/zinseszinsBerechnen',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('zinseszinsBerechnen.ejs', { 
+        meldung:""                             
+        })
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+app.post('/zinseszinsBerechnen',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+
+        konto.Anfangskapital = req.body.anfangskapital
+        konto.Zinssatz = req.body.zinssatz
+        konto.Laufzeit = req.body.laufzeit
+
+        var anfangskapital = req.body.anfangskapital
+        var zinssatz = req.body.zinssatz
+        var laufzeit = req.body.laufzeit
+
+        let zinsen = anfangskapital * zinssatz * (laufzeit/12)
+
+        console.log(zinsen)
+        
+        console.log("Kunde ist angemeldet als " + idKunde)
+        res.render('zinseszinsBerechnen.ejs', {
+            meldung: "Der Zinsen betragen " + zinsen + "€"                              
         })
     }else{
         res.render('login.ejs', {                    
