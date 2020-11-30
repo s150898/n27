@@ -458,15 +458,30 @@ app.post('/zinseszinsBerechnen',(req, res, next) => {
     
     if(idKunde){
 
+        
+
         konto.Anfangskapital = req.body.anfangskapital
         konto.Zinssatz = req.body.zinssatz
         konto.Laufzeit = req.body.laufzeit
 
-        var anfangskapital = req.body.anfangskapital
-        var zinssatz = req.body.zinssatz
-        var laufzeit = req.body.laufzeit
+        const z = 5
+        const y = 6 
+        let k = z + y
 
-        let zinsen = anfangskapital * zinssatz * (laufzeit/12)
+        console.log(k)
+
+        
+        /*var anfangskapital = 100
+        var zinssatz = 5
+        var laufzeit = 10*/
+
+        /*for(var i = 0; i < 10; i++){
+            console.log(i)
+        }*/
+
+
+        
+    zinsen = anfangskapital * zinssatz * (laufzeit/12)
 
         console.log(zinsen)
         
