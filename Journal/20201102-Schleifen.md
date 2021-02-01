@@ -87,3 +87,18 @@ for(var z = 0; z < 3; z++){
 * app.get
 * app.post
 * Funktion zur Berechnung der Zinseszinsen
+
+
+Präsentation
+
+```Javascript
+for(var i = 90; i > 0; i=i-7){
+    console.log(i)
+}
+```
+
+```Javascript
+for(var i = 3; i >= 0; i--){
+    console.log(i)
+}
+```

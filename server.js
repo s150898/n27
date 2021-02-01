@@ -1,10 +1,5 @@
 // .\node_modules\.bin\nodemon .\server.js
 
-
-
-
-
-
 // Klassendefinition
 
 class Konto {
@@ -59,14 +54,20 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 
+
 // host: Adresse des Servers
 // port: lauscht auf port 3306
+
+const env = process.env.NODE_ENV || 'development';
+const config = require('./config')[env];
+
+
 const dbVerbindung = mysql.createConnection ({
-    host: "10.40.38.110",
-    port: "3306",
-    database: "dbn27",
-    user: "placematman",
-    password: "BKB123456!"
+    host: config.database.host,
+    port: config.database.port,
+    database: config.database.db,
+    user: config.database.user,
+    password: config.database.password
 })
 
 
@@ -84,7 +85,7 @@ dbVerbindung.connect()
 // primary key kennzeichnet datensatz; das einzelne Konto eindeutig; es kann keine 2 gleiche iban geben
 
 dbVerbindung.connect(function(err){
-    dbVerbindung.query("CREATE TABLE konto(iban VARCHAR(22), idKunde INT(11), anfangssalso DECIMAL(15,2), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE konto(iban VARCHAR(22), idKunde INT(11), kontoart VARCHAR(20), timestamp TIMESTAMP, PRIMARY KEY (iban));",function(err, result){
         if(err){
             if(err.code == "ER_TABLE_EXISTS_ERROR"){
                 console.log("Die Tabelle konto existiert bereits." )
@@ -128,13 +129,25 @@ dbVerbindung.connect(function(err){
 
 // Der Datentyp INT ist für Ganzzahlen
 
+dbVerbindung.connect(function(err){
+    dbVerbindung.query("CREATE TABLE kontobewegung(iban VARCHAR(22), betrag DECIMAL(15,2), verwendungszweck VARCHAR(140), timestamp TIMESTAMP, PRIMARY KEY (iban, timestamp), FOREIGN KEY (iban) REFERENCES konto(iban));",function(err, result){
+        if(err){
+            if(err.code == "ER_TABLE_EXISTS_ERROR"){
+                console.log("Die Tabelle kontobewegung existiert bereits." )
+            }else{
+                console.log("Es ist ein Fehler aufgetreten: " + err.code)
+            }  
+        }else{
+            console.log("Tabelle kontobewegung erstellt.")
+        }
+    })
+})
+
 kunde.Mail = "s150898@berufskolleg-borken.de"
 kunde.Vorname = "L"
 kunde.Nachname = "E"
 kunde.Kennwort = "123"
 kunde.IdKunde = 150898
-
-
 
 dbVerbindung.connect(function(err){
     dbVerbindung.query("INSERT INTO kunde(idKunde, vorname, nachname, kennwort, mail) VALUES (" + kunde.IdKunde + ", '" + kunde.Vorname + "', '" + kunde.Nachname + "', '" + kunde.Kennwort + "','" + kunde.Mail + "');", function(err, result){
@@ -255,7 +268,6 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // dass konkrete Eigenscahftswerte dem Objekt zugewiesen werden.
         konto.Kontonummer = req.body.kontonummer
         konto.Kontoart = req.body.kontoart
-        konto.Anfangssaldo = req.body.anfangssaldo
         konto.IdKunde = idKunde
     
         // Client stellt request , reqeust enthält Wert der Kontonummer
@@ -274,7 +286,7 @@ app.post('/kontoAnlegen',(req, res, next) => {
         // weil das alles wie ein String ist werden die dynamischen Inhalte mit plus eingefügt  
 
         dbVerbindung.connect(function(err){
-            dbVerbindung.query("INSERT INTO konto(iban, idKunde, anfangssaldo,kontoart,  timestamp) VALUES ('" + konto.Iban + "', "+ konto.IdKunde +", " + konto.Anfangssaldo + ", '" + konto.Kontoart + "', NOW());", function(err, result){
+            dbVerbindung.query("INSERT INTO konto(iban, idKunde, kontoart, timestamp) VALUES ('" + konto.Iban + "', "+ konto.IdKunde + ", '" + konto.Kontoart + "', NOW());", function(err, result){
                 if(err){
                     if(err.code == "ER_DUP_ENTRY"){
                         console.log("Das Konto mit der ID " + konto.IdKunde + " existiert bereits" )
@@ -359,7 +371,7 @@ app.post('/ueberweisen',(req, res, next) => {
 
        // Das Zielkonto und der Betarg wird aus dem Formular entgegengenommen.
 
-       let zielkontonummer = req.body.zielkontonummer
+       let zieliban = req.body.zieliban
        let betrag = req.body.betrag
 
     /*
@@ -458,36 +470,19 @@ app.post('/zinseszinsBerechnen',(req, res, next) => {
     
     if(idKunde){
 
+        var kapital = req.body.startkapital
+        var zinssatz = req.body.zinssatz
+        var laufzeit = req.body.laufzeit
         
+        var jahr;
 
-        konto.Anfangskapital = req.body.anfangskapital
-        konto.Zinssatz = req.body.zinssatz
-        konto.Laufzeit = req.body.laufzeit
-
-        const z = 5
-        const y = 6 
-        let k = z + y
-
-        console.log(k)
-
-        
-        /*var anfangskapital = 100
-        var zinssatz = 5
-        var laufzeit = 10*/
-
-        /*for(var i = 0; i < 10; i++){
-            console.log(i)
-        }*/
-
-
-        
-    zinsen = anfangskapital * zinssatz * (laufzeit/12)
-
-        console.log(zinsen)
+        for (jahr = 0; jahr <= laufzeit ; jahr++){
+            kapital = kapital*zinssatz/100 + kapital 
+        }
         
         console.log("Kunde ist angemeldet als " + idKunde)
         res.render('zinseszinsBerechnen.ejs', {
-            meldung: "Der Zinsen betragen " + zinsen + "€"                              
+            meldung: "Die Zinsen wurden berechnet. Endkapital: " + kapital + "€"                              
         })
     }else{
         res.render('login.ejs', {                    
