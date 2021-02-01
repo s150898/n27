@@ -130,7 +130,7 @@ dbVerbindung.connect(function(err){
 // Der Datentyp INT ist für Ganzzahlen
 
 dbVerbindung.connect(function(err){
-    dbVerbindung.query("CREATE TABLE kontobewegung(iban VARCHAR(22), betrag DECIMAL(15,2), verwendungszweck VARCHAR(140), timestamp TIMESTAMP, PRIMARY KEY (iban, timestamp), FOREIGN KEY (iban) REFERENCES konto(iban));",function(err, result){
+    dbVerbindung.query("CREATE TABLE kontobewegung(iban VARCHAR(22), gegeniban VARCHAR(22), betrag DECIMAL(15,2), verwendungszweck VARCHAR(140), timestamp TIMESTAMP, PRIMARY KEY (iban, timestamp), FOREIGN KEY (iban) REFERENCES konto(iban));",function(err, result){
         if(err){
             if(err.code == "ER_TABLE_EXISTS_ERROR"){
                 console.log("Die Tabelle kontobewegung existiert bereits." )
@@ -142,6 +142,13 @@ dbVerbindung.connect(function(err){
         }
     })
 })
+
+/*  FOREIGN KEY (iban) REFERENCES konto(iban)
+    Wir verwendet, damit es zu keiner Löschanomalie kommt (Anomalie = fehlerhafter oder
+    unterdrückter Datenbankzugriff)
+    Ansonsten könnte die Iban eines Kunden gelöscht werden, obwohl noch Kontobewegungen mit 
+    dieser Iban existieren
+*/
 
 kunde.Mail = "s150898@berufskolleg-borken.de"
 kunde.Vorname = "L"
