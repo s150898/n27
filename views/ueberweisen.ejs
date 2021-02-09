@@ -24,8 +24,20 @@
       <a href="/profilBearbeiten"><i class="fa fa-user" aria-hidden="true"></i></a>
     </nav>  
     <form method="POST" action="/ueberweisen">          
+        <label>Quell-Iban:</label>          
+        <input type="text" name="quellIban">
+        
+        <select name="cars" id="cars">
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="vw">VW</option>
+          <option value="audi" selected>Audi</option>
+        </select>
+
         <label>Ziel-Iban:</label>          
-        <input type="text" name="zieliban">
+        <input type="text" name="zielIban">
+        <label>Verwendungszweck:</label>          
+        <input type="text" name="verwendungszweck" pattern="[0-139]{140}" title="Bitte exakt 140 Ziffern eingeben!">
         <label>Betrag:</label>          
         <input type="number" name="betrag">          
         <button>Überweisen</button>
