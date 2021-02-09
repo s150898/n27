@@ -15,20 +15,21 @@
     <title>N27 - Startseite</title>
   </head>
   <body>
-    <h1>Herzlich Willkommen</h1>     
-    <nav>      
-      <a href="/"><i class="fa fa-home" aria-hidden="true"></i></a>                        
-      <a href="/login">Logout</a>          
-      <a href="/impressum">Impressum</a>     
-      <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
-      <a href="/profilBearbeiten"><i class="fa fa-user" aria-hidden="true"></i></a>
-    </nav>  
+    <header>
+      <h1>Herzlich Willkommen</h1>    
+      <nav>      
+        <a href="/"><i class="fa fa-home" aria-hidden="true"></i></a>                        
+        <a href="/login">Logout</a>        
+        <a href="/impressum">Impressum</a>   
+        <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
+        <a href="/profilBearbeiten"><i class="fa fa-id-card-o" aria-hidden="true"></i></a>        
+      </nav>
+    </header>   
     <form>          
       <button formaction="/kontoAnlegen">Konto anlegen</button>
       <button formaction="/ueberweisen">Überweisen</button>
-      <button formaction="/kontoAbfragen">Kontostand abfragen</button>
-      <button formaction="/zinseszinsBerechnen">Zinseszins berechnnen</button>
-    </form> 
+      <button formaction="/kontoAbfragen">Konto abfragen</button>
+      <button formaction="/zinsrechnung">Endkapital berechnen</button>
+    </form>     
   </body>
 </html>
-

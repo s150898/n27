@@ -7,6 +7,7 @@
 // Alle Objekte, die von dieser Klasse instanziiert werden, haben 
 // dieselben Eigenschaften, aber möglciherweise unterschiedliche Eigenschaftswerte
 
+
 class Konto{
     constructor(){
         this.Iban

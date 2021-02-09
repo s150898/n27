@@ -18,32 +18,39 @@
     <h1>Überweisung</h1>  
     <nav>      
       <a href="/"><i class="fa fa-home" aria-hidden="true"></i></a>                        
-      <a href="/login">Logout</a>          
-      <a href="/impressum">Impressum</a>     
+      <a href="/login">Logout</a>        
+      <a href="/impressum">Impressum</a>   
       <a href="mailto:stefan.baeumer@berufskolleg-borken.de"> <i class="fa fa-envelope-o"></i></a>
-      <a href="/profilBearbeiten"><i class="fa fa-user" aria-hidden="true"></i></a>
-    </nav>  
+      <a href="/profilBearbeiten"><i class="fa fa-id-card-o" aria-hidden="true"></i></a>        
+    </nav>
     <form method="POST" action="/ueberweisen">          
-        <label>Quell-Iban:</label>          
-        <input type="text" name="quellIban">
-        
-        <select name="cars" id="cars">
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="vw">VW</option>
-          <option value="audi" selected>Audi</option>
+      <label>QuellIban:</label>                
+      <select name="cars" id="cars">
+
+        <!-- 
+          Alle quellIbans aus dem Datenbank-Result werden in einer Schleife durchlaufen.
+          Aus jedem einzelnen Element der Liste quellibans wird die Iban ausgelesen
+         -->
+        <% for(var i=0; i< quellIbans.length; i++) {%>              
+          <option value="<%= quellIbans[i].iban %>"><%= quellIbans[i].iban %></option>                  
+        <% } %> 
+
         </select>
 
-        <label>Ziel-Iban:</label>          
+      <label>ZielIban:</label>          
+      <!--
+        
+        Hausaufgabe:
+        Die Zielibans müssen ebenfalls aus einem Auswahlmenü gewählt werden. Bitte umsetzen.
+      
+      -->
         <input type="text" name="zielIban">
         <label>Verwendungszweck:</label>          
-        <input type="text" name="verwendungszweck" pattern="[0-139]{140}" title="Bitte exakt 140 Ziffern eingeben!">
+        <input type="text" name="verwendungszweck" pattern="[0-139]{140}">
         <label>Betrag:</label>          
         <input type="number" name="betrag">          
         <button>Überweisen</button>
-    </form> 
-    <p>
-      <%= meldung%>
-    </p>
+    </form>  
+    <%= meldung %>
   </body>
 </html>
