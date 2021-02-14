@@ -389,47 +389,47 @@ app.post('/profilBearbeiten',(req, res, next) => {
 
 app.get('/ueberweisen',(req, res, next) => {   
 
-    // Wenn der Kunde angemeldet ist, wird seine Kunden-ID als Cookie im Browser gespeichert.
-    // Der Cookie wird ausgelesen und an die Variable namens idKunde zugewiesen
+    // Der Cookie mit dem Namen 'istAngemeldetAls' wird abgefragt und der Variablen idKunde zugewiesen.
 
     let idKunde = req.cookies['istAngemeldetAls']
     
-    // Wenn idKunde einen Wert annimmt, dann ist idKunde == true
+    // Wenn idKunde ungleich leer oder null, dann ist der Wert von idKunde == true
 
     if(idKunde){
         console.log("Kunde ist angemeldet als " + idKunde)
         
-        // Die Ibans des Kunden mit der idKunde werden aus der Datenbank ausgelesen:
+        // Eine neue Variable namens quellkonten wird deklariert. 
 
-        dbVerbindung.connect(function(err){
+        let quellkonten
 
-            dbVerbindung.query("SELECT iban FROM konto WHERE idKunde = '" + idKunde + "';", function(err, result){
-                if(err){
-                    console.log("Es ist ein Fehler aufgetreten: " + err)
-                }else{
-                    
-                console.group(result)
-
-                // Hausaufgabe: Hier muss die dbVerbindung.query() zur Datenbank hergestellt werden, um alle gültigen ZielIbans auszulesen. 
-                // Die Verbindungen werden also ineinander geschachtelt.
-                // Die res.render()-Zeilen müssen in den Rumpf der innerern dbVerbindung.query() gelegt werden.
-                // Der Result der inneren dbVerbindung.query() muss dann anders benannt werden. Z.B. result2 oder resultZielIbans
-
-
+        dbVerbindung.connect(function(fehler){
+            dbVerbindung.query('SELECT iban FROM konto WHERE idKunde = "' + idKunde + '";', function (fehler, quellkontenResult) {
+                if (fehler) throw fehler
                 
-                // ... dann wird kontoAnlegen.ejs gerendert.
+                console.log(quellkontenResult)
         
+                // Der neuen Variablen namens quellkonten wird der Result zugewiesen.
+
+                quellkonten = quellkontenResult
+            })
+        })
+  
+
+        dbVerbindung.connect(function(fehler){
+
+            // Durch diesen Select-Befehl werden alle Ibans angezeigt.
+            dbVerbindung.query('SELECT iban FROM konto;', function (fehler, zielkontenResult) {
+                if (fehler) throw fehler
+                
+                console.log(zielkontenResult)
+        
+                // Die ueberweisen-Seite wird mit den quellkonten und zielkonten an den Browser übergeben.
+
                 res.render('ueberweisen.ejs', {    
                     meldung : "",
-                    quellIbans : result                          
+                         quellkonten : quellkonten,
+                         zielkonten : zielkontenResult                     
                 })
-                    
-                // Hausaufgabe
-
-
-
-
-                }        
             })
         })
     }else{
@@ -437,6 +437,17 @@ app.get('/ueberweisen',(req, res, next) => {
         })    
     }
 })
+    
+    // Die app.post wird abgearbeitet, wenn der Button auf dem Formular gedrückt wird.
+
+
+// Hausaufgabe: Hier muss die dbVerbindung.query() zur Datenbank hergestellt werden, um alle gültigen ZielIbans auszulesen. 
+                // Die Verbindungen werden also ineinander geschachtelt.
+                // Die res.render()-Zeilen müssen in den Rumpf der innerern dbVerbindung.query() gelegt werden.
+                // Der Result der inneren dbVerbindung.query() muss dann anders benannt werden. Z.B. result2 oder resultZielIbans
+                // ... dann wird kontoAnlegen.ejs gerendert.
+        
+
 
 app.post('/ueberweisen',(req, res, next) => {   
 
