@@ -194,7 +194,8 @@ app.get('/',(req, res, next) => {
     
     if(idKunde){
         console.log("Kunde ist angemeldet als " + idKunde)
-        res.render('index.ejs', {                              
+        res.render('index.ejs', { 
+            meldung : ""                             
         })
     }else{
         res.render('login.ejs', {                    
@@ -237,7 +238,8 @@ app.post('/',(req, res, next) => {
     if(idKunde == kunde.IdKunde && kennwort == kunde.Kennwort){
         console.log("Der Cookie wird gesetzt: " + idKunde)
         res.cookie('istAngemeldetAls', idKunde)
-        res.render('index.ejs', {                    
+        res.render('index.ejs', { 
+            meldung : ""                   
         })
     }else{
         console.log("Der Cookie wird gelöscht")
@@ -389,47 +391,45 @@ app.post('/profilBearbeiten',(req, res, next) => {
 
 app.get('/ueberweisen',(req, res, next) => {   
 
-    // Der Cookie mit dem Namen 'istAngemeldetAls' wird abgefragt und der Variablen idKunde zugewiesen.
+    // Wenn der Kunde angemeldet ist, wird seine Kunden-ID als Cookie im Browser gespeichert.
+    // Der Cookie wird ausgelesen und an die Variable namens idKunde zugewiesen
 
     let idKunde = req.cookies['istAngemeldetAls']
     
-    // Wenn idKunde ungleich leer oder null, dann ist der Wert von idKunde == true
+    // Wenn idKunde einen Wert annimmt, dann ist idKunde == true
 
     if(idKunde){
         console.log("Kunde ist angemeldet als " + idKunde)
         
-        // Eine neue Variable namens quellkonten wird deklariert. 
+        // Die Ibans des Kunden mit der idKunde werden aus der Datenbank ausgelesen:
 
-        let quellkonten
+        dbVerbindung.connect(function(err){
 
-        dbVerbindung.connect(function(fehler){
-            dbVerbindung.query('SELECT iban FROM konto WHERE idKunde = "' + idKunde + '";', function (fehler, quellkontenResult) {
-                if (fehler) throw fehler
-                
-                console.log(quellkontenResult)
-        
-                // Der neuen Variablen namens quellkonten wird der Result zugewiesen.
+            var quellkonten
 
-                quellkonten = quellkontenResult
+            dbVerbindung.query("SELECT iban FROM konto WHERE idKunde = '" + idKunde + "';", function(err, quellkontenResult){
+                if(err){
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                }else{                    
+                    console.log(quellkontenResult)                    
+                    quellkonten = quellkontenResult       
+                }        
             })
-        })
-  
 
-        dbVerbindung.connect(function(fehler){
-
-            // Durch diesen Select-Befehl werden alle Ibans angezeigt.
-            dbVerbindung.query('SELECT iban FROM konto;', function (fehler, zielkontenResult) {
-                if (fehler) throw fehler
-                
-                console.log(zielkontenResult)
-        
-                // Die ueberweisen-Seite wird mit den quellkonten und zielkonten an den Browser übergeben.
-
-                res.render('ueberweisen.ejs', {    
-                    meldung : "",
-                         quellkonten : quellkonten,
-                         zielkonten : zielkontenResult                     
-                })
+            dbVerbindung.query("SELECT iban FROM konto;", function(err, zielkontenResult){
+                if(err){
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                }else{
+                    console.log(zielkontenResult)
+                    
+                    // ... dann wird kontoAnlegen.ejs gerendert.
+            
+                    res.render('ueberweisen.ejs', {    
+                        meldung : "",
+                        quellIbans : quellkonten,
+                        zielIbans : zielkontenResult
+                    })
+                }        
             })
         })
     }else{
@@ -438,16 +438,7 @@ app.get('/ueberweisen',(req, res, next) => {
     }
 })
     
-    // Die app.post wird abgearbeitet, wenn der Button auf dem Formular gedrückt wird.
-
-
-// Hausaufgabe: Hier muss die dbVerbindung.query() zur Datenbank hergestellt werden, um alle gültigen ZielIbans auszulesen. 
-                // Die Verbindungen werden also ineinander geschachtelt.
-                // Die res.render()-Zeilen müssen in den Rumpf der innerern dbVerbindung.query() gelegt werden.
-                // Der Result der inneren dbVerbindung.query() muss dann anders benannt werden. Z.B. result2 oder resultZielIbans
-                // ... dann wird kontoAnlegen.ejs gerendert.
-        
-
+// Die app.post wird abgearbeitet, wenn der Button auf dem Formular gedrückt wird.
 
 app.post('/ueberweisen',(req, res, next) => {   
 
@@ -458,50 +449,35 @@ app.post('/ueberweisen',(req, res, next) => {
         
         // Das Zielkonto und der Betrag wird aus dem Formular entgegengenommen.
 
-        let zieliban = req.body.zieliban
+        let quellIban = req.body.quellIban
+        let zielIban = req.body.zielIban
         let betrag = req.body.betrag
-        
+        let verwendungszweck = req.body.verwendungszweck
+                
+        console.log(quellIban + "->" + zielIban + ", " + betrag + " Euro," + verwendungszweck)
 
-
-
-        /*
         // Der aktuelle Anfangssaldo wird aus der Datenbank ausgelesen
-        // Hier wieder Hochkommas gehören zum SQL Befehl dann weil quasi 2 Strings die Hochkommas, der dynamischen Inhalt mit Plus einfügen
 
         dbVerbindung.connect(function(err){
 
-            dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE iban = '" + zielkontonummer + "';", function(err, result){
+            dbVerbindung.query("INSERT INTO kontobewegung(quellIban, zielIban, betrag, verwendungszweck, timestamp) VALUES ('" + quellIban + "', '" + zielIban + "', " + (Math.abs(betrag) * -1) + ",'" + verwendungszweck + "', NOW());", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
-                    console.log("Tabelle erstellt bzw. schon existent.")    
+                    console.log("Die Überweisung i.H.v. " + betrag + " Euro wurde abgebucht von Konto " + quellIban + ".")    
                 }        
             })
-        })
-        */
 
-
-        //ToDo: Saldo um den Betrag reduzieren mit einem SQL-UPDATE.
-
-         // Hier gleiches Schema, die Hochkommas gehören nicht zum SQL Befehl weil es ZAhlen  sind und damit gerechnet wird Zielkontonummer ist aber Text deswegen Hochkommas
-
-        dbVerbindung.connect(function(err){
-
-            dbVerbindung.query("UPDATE konto SET anfangssaldo = anfangssaldo + " + betrag + " WHERE iban = '" + zielkontonummer + "' ;", function(err, result){
+            dbVerbindung.query("INSERT INTO kontobewegung(zielIban, quellIban, betrag, verwendungszweck, timestamp) VALUES ('" + quellIban + "', '" + zielIban + "', " + betrag + ",'" + verwendungszweck + "', NOW());", function(err, result){
                 if(err){
                     console.log("Es ist ein Fehler aufgetreten: " + err)
                 }else{
-                    console.log("Tabelle erstellt bzw. schon existent.")                     
+                    console.log("Die Überweisung i.H.v. " + betrag + " wurde gutgeschrieben auf Konto " + zielIban)    
                 }        
             })
         })
-
-
-        //ToDo: Betrag beim Zielkonto gutschreiben mit einem SQL-UPDATE.
-
-        // Umsetzung mit einer gemeinsamen relationalen Datenbank.
-
-        res.render('ueberweisen.ejs', {                              
+       
+        res.render('index.ejs', {                              
             meldung : "Die Überweisung wurde erfolgreich ausgeführt."
         })
     }else{
@@ -515,36 +491,86 @@ app.post('/ueberweisen',(req, res, next) => {
 
 app.get('/kontoAbfragen',(req, res, next) => {   
 
+    // Wenn der Kunde angemeldet ist, wird seine Kunden-ID als Cookie im Browser gespeichert.
+    // Der Cookie wird ausgelesen und an die Variable namens idKunde zugewiesen
+
     let idKunde = req.cookies['istAngemeldetAls']
     
-    //Aus der Datenbank muss der Kontostand für das Objekt selektiert werden.
-    // Bei den dynamischen Inahlten braucht es '', weil es sich um keine Zahl handelt
-    // Problem: Iban muss erst noch als Eigenschaft angelegt werden usw. (??)
-
-
-    dbVerbindung.connect(function(err){
-
-        dbVerbindung.query("SELECT anfangssaldo FROM konto WHERE idKunde = '" + idKunde + "';", function(err, result){
-            if(err){
-                console.log("Es ist ein Fehler aufgetreten: " + err)
-            }else{
-                if(result[0] != null)
-                    console.log("Kontostand wurde erfolgreich abgefragt. Der Kontostand ist: " + result[0].anfangssaldo)                                     
-            }        
-        })
-    })
-
+    // Wenn idKunde einen Wert annimmt, dann ist idKunde == true
 
     if(idKunde){
         console.log("Kunde ist angemeldet als " + idKunde)
-        res.render('kontoAbfragen.ejs', { 
-            meldung : "Hallo"                             
+        
+        // Die Ibans des Kunden mit der idKunde werden aus der Datenbank ausgelesen:
+
+        dbVerbindung.connect(function(err){
+
+
+            dbVerbindung.query("SELECT iban FROM konto WHERE idKunde = '" + idKunde + "';", function(err, abfragekontenResult){
+                if(err){
+                    console.log("Es ist ein Fehler aufgetreten: " + err)
+                }else{
+                    console.log(abfragekontenResult)
+                    
+                    // ... dann wird kontoAnlegen.ejs gerendert.
+            
+                    res.render('kontoAbfragen.ejs', {    
+                        meldung : "",
+                        abfrageIbans : abfragekontenResult
+                    })
+                }        
+            })
         })
     }else{
         res.render('login.ejs', {                    
         })    
     }
 })
+
+app.post('/kontoAbfragen',(req, res, next) => {   
+
+    let idKunde = req.cookies['istAngemeldetAls']
+    
+    if(idKunde){
+
+        console.log("Kunde ist angemeldet als " + idKunde)
+        
+        let abfrageIban = req.body.abfrageIban
+        
+        let kontostand = 0
+        
+      
+        dbVerbindung.query('SELECT betrag FROM kontobewegung WHERE quelliban = "' + abfrageIban + '";', function (fehler, result) {
+            if(fehler){
+                console.log("Es ist ein Fehler aufgetreten: " + err)
+            }else{
+                for(var i = 0;i < result.length;i++){                
+                    kontostand = kontostand + result[i].betrag                
+                }
+                console.log("Der Kontostand mit der Iban " + abfrageIban + " wurde erfolgreich abgefragt und beträgt  " + kontostand + ".")
+            }
+
+        
+            res.render('index.ejs', {                              
+                meldung : "Kontostand des Kontos mit der Iban " + abfrageIban + " ist: " + kontostand + " €."
+            })
+        })
+        
+    }else{
+        res.render('login.ejs', {                    
+        })    
+    }
+})
+
+
+
+
+
+                
+            
+
+
+
 
 
 app.get('/zinsrechnung',(req, res, next) => {   
